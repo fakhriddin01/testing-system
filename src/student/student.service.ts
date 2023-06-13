@@ -158,14 +158,12 @@ export class StudentService {
   }
 
   private async generateToken(user: Student){
-    const jwtPayload = { id: user.id, isActive: user.isActive };
+    const jwtPayload = { id: user.id, isActive: user.isActive, roles: [{role:{name:'STUDENT'}}] };
     const accessToken = await this.jwtService.signAsync(jwtPayload, {
         secret: process.env.ACCESS_TOKEN_KEY,
         expiresIn: process.env.ACCESS_TOKEN_TIME
-      })
-  
+    })
 
-    return accessToken
-  
+    return accessToken  
   }
 }

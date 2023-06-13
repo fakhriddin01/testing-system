@@ -25,6 +25,7 @@ export class Answer extends Model<Answer, AnswerCreateAttr> {
 
     @Column({
         type:DataType.BOOLEAN,
+        defaultValue: false
     })
     is_true: boolean;
 

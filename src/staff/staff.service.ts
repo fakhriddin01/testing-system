@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { Staff } from './models/staff.model';
@@ -10,6 +10,7 @@ import { FilesService } from '../files/files.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ActivateStaffDto } from './dto/activate-staff.dto';
 import { DeactivateStaffDto } from './dto/deactivate-staff.dto copy';
+import { StaffRoleService } from '../staff-role/staff-role.service';
 
 @Injectable()
 export class StaffService {
@@ -18,6 +19,7 @@ export class StaffService {
     @InjectModel(Staff) private staffRepo: typeof Staff,
     private readonly fileService: FilesService,
     private readonly jwtService: JwtService,
+    @Inject(forwardRef(() => StaffRoleService)) private readonly staffRoleService: StaffRoleService
     ){}
 
   async create(createStaffDto: CreateStaffDto) {
@@ -27,6 +29,7 @@ export class StaffService {
     const email = createStaffDto.email.toLowerCase();
     const hashed_password = await bcrypt.hash(password, 7);
     const newStaff = await this.staffRepo.create({first_name:first_name.toLowerCase(), last_name:last_name.toLowerCase(), phone_number, telegram_link, email, login: login.toLowerCase(), hashed_password})
+    const newRole = await this.staffRoleService.create({staff_id: newStaff.id, role_id:2})
     return {message: "new staff created", newStaff};
   }
 
@@ -164,13 +167,14 @@ export class StaffService {
   }
 
   private async generateToken(user: Staff){
-    const jwtPayload = { id: user.id, isActive: user.isActive };
+    const users = await this.findOne(user.id)
+    const jwtPayload = { id: user.id, isActive: user.isActive, roles: users.roles };
+    
     const accessToken = await this.jwtService.signAsync(jwtPayload, {
         secret: process.env.ACCESS_TOKEN_KEY,
         expiresIn: process.env.ACCESS_TOKEN_TIME
       })
   
-
     return accessToken
   
   }

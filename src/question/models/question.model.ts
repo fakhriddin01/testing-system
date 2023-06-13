@@ -27,6 +27,7 @@ export class Question extends Model<Question, QuestionCreateAttr> {
 
     @Column({
         type:DataType.BOOLEAN,
+        defaultValue: false
     })
     isMultianswer: boolean;
 

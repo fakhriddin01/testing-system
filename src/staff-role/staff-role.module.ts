@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { StaffRoleService } from './staff-role.service';
 import { StaffRoleController } from './staff-role.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -14,10 +14,11 @@ import { RoleModule } from '../role/role.module';
   JwtModule.register({
     
   }),
-  StaffModule,
+  forwardRef(()=>StaffModule),
   RoleModule
 ],
   controllers: [StaffRoleController],
-  providers: [StaffRoleService]
+  providers: [StaffRoleService],
+  exports:[StaffRoleService]
 })
 export class StaffRoleModule {}

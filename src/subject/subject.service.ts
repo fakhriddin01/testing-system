@@ -33,6 +33,13 @@ export class SubjectService {
       throw new HttpException("Subject not found", HttpStatus.NOT_FOUND)
     }
 
+    const validate = await this.fileService.validateImageFile(file);
+    if(!validate){
+      throw new HttpException(
+        'File size should not exceed 5MB',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const fileName = await this.fileService.createFile(file);
     const updateSubject = await this.subjectRepo.update({image: fileName}, {where: {id}, returning:true})
     return {message: "image updated", updateSubject}
