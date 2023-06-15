@@ -114,7 +114,8 @@ export class StaffService {
     if(!staff){
       throw new HttpException("User not found", HttpStatus.NOT_FOUND)
     }
-
+    await this.fileService.validateImageFile(file);
+    
     const fileName = await this.fileService.createFile(file);
     const updateStaff = await this.staffRepo.update({image: fileName}, {where: {id: staff.id}, returning:true})
     return {message: "avatar image updated", updateStaff}

@@ -1,6 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateStaffRoleDto } from './dto/create-staff-role.dto';
-import { UpdateStaffRoleDto } from './dto/update-staff-role.dto';
 import { StaffRole } from './models/staff-role.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { StaffService } from '../staff/staff.service';

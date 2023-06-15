@@ -109,7 +109,7 @@ export class StudentService {
     if(!student){
       throw new HttpException("Student not found", HttpStatus.NOT_FOUND)
     }
-
+    await this.fileService.validateImageFile(file);
     const fileName = await this.fileService.createFile(file);
     const updateStudent = await this.studentRepo.update({image: fileName}, {where: {id: student.id}, returning:true})
     return {message: "avatar image updated", updateStudent}

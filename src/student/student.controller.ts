@@ -11,11 +11,16 @@ import { Roles } from '../decorators/roles-auth.decorators';
 import { RolesGuard } from '../guards/roles.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { UserSelfGuard } from '../guards/user-self.guard';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileUploadDto } from '../staff/dto/file-upload.dto';
 
+@ApiBearerAuth()
+@ApiTags('Student controllers')
 @Controller('student')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
+  @ApiOperation({summary: 'Create new student'})
   @Roles('DEKAN', "ADMIN", "TEACHER")
   @UseGuards(RolesGuard)
   @Post('create')
@@ -23,19 +28,28 @@ export class StudentController {
     return this.studentService.create(createStudentDto);
   }
 
+  @ApiOperation({summary: 'Login student'})
   @Post('login')
   login(@Body() loginStudentDto: LoginStudentDto) {
     return this.studentService.login(loginStudentDto);
   }
 
+
+  @ApiOperation({summary: 'Update student avatar image'})
   @UseGuards(UserSelfGuard)
   @UseGuards(JwtAuthGuard)
   @Post('avatar/:id')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'List of cats',
+    type: FileUploadDto,
+  })
   updateImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     return this.studentService.updateImage(+id, file);
   }
 
+  @ApiOperation({summary: 'Activate student'})
   @Roles('DEKAN', "ADMIN", "TEACHER")
   @UseGuards(RolesGuard)
   @Post('activation')
@@ -43,6 +57,7 @@ export class StudentController {
     return this.studentService.activation(activateStudentDto);
   }
 
+  @ApiOperation({summary: 'Deactivate student'})
   @Roles('DEKAN', "ADMIN", "TEACHER")
   @UseGuards(RolesGuard)
   @Post('deactivation')
@@ -50,6 +65,7 @@ export class StudentController {
     return this.studentService.deactivation(deactivateStudentDto);
   }
 
+  @ApiOperation({summary: 'Find all students'})
   @Roles('DEKAN', "ADMIN", "TEACHER")
   @UseGuards(RolesGuard)
   @Get()
@@ -57,12 +73,14 @@ export class StudentController {
     return this.studentService.findAll();
   }
 
+  @ApiOperation({summary: 'Find one student by ID'})
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.studentService.findOne(+id);
   }
-  
+
+  @ApiOperation({summary: 'Update one student by ID'})
   @UseGuards(UserSelfGuard)
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
@@ -70,6 +88,7 @@ export class StudentController {
     return this.studentService.update(+id, updateStudentDto);
   }
 
+  @ApiOperation({summary: 'Update one student password'})
   @UseGuards(UserSelfGuard)
   @UseGuards(JwtAuthGuard)
   @Patch('/password/:id')
@@ -77,6 +96,7 @@ export class StudentController {
     return this.studentService.updatePassword(+id, updatePasswordDto);
   }
 
+  @ApiOperation({summary: 'Delete one student by ID'})
   @Roles('DEKAN', "ADMIN", "TEACHER")
   @UseGuards(RolesGuard)
   @Delete(':id')

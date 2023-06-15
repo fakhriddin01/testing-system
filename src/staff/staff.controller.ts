@@ -11,8 +11,10 @@ import { Roles } from '../decorators/roles-auth.decorators';
 import { RolesGuard } from '../guards/roles.guard';
 import { UserSelfGuard } from '../guards/user-self.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileUploadDto } from './dto/file-upload.dto';
 
+@ApiBearerAuth()
 @ApiTags('Staff controllers')
 @Controller('staff')
 export class StaffController {
@@ -38,6 +40,11 @@ export class StaffController {
   @UseGuards(RolesGuard)
   @Post('avatar/:id')
   @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'List of cats',
+    type: FileUploadDto,
+  })
   updateImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
     return this.staffService.updateImage(+id, file);
   }

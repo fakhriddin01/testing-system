@@ -40,7 +40,8 @@ export class FilesService {
   }
 
   async validateImageFile(file: any): Promise<boolean> {
-    if (file.size > 1024 * 1024 * 5) {
+   
+    if (file.size > 1024 * 1024 * 6) {
       throw new HttpException(
         'File size should not exceed 5MB',
         HttpStatus.BAD_REQUEST,
@@ -53,7 +54,7 @@ export class FilesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
+    
     return true;
   }
 }

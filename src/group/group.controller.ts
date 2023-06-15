@@ -5,9 +5,10 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { Roles } from '../decorators/roles-auth.decorators';
 import { RolesGuard } from '../guards/roles.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 
+@ApiBearerAuth()
 @ApiTags('Group controllers')
 @Controller('group')
 export class GroupController {

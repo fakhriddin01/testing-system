@@ -21,6 +21,7 @@ async function start() {
     })
 
     const config = new DocumentBuilder()
+            .addBearerAuth()
             .setTitle('Medium Lite')
             .setDescription('REST API')
             .setVersion('1.0.0')

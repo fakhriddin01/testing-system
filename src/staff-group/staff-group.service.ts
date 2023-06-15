@@ -1,6 +1,5 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateStaffGroupDto } from './dto/create-staff-group.dto';
-import { UpdateStaffGroupDto } from './dto/update-staff-group.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { StaffGroup } from './models/staff-group.model';
 import { StaffService } from '../staff/staff.service';

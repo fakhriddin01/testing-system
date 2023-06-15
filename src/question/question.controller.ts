@@ -5,9 +5,10 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 import { Roles } from '../decorators/roles-auth.decorators';
 import { RolesGuard } from '../guards/roles.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 
+@ApiBearerAuth()
 @ApiTags('Questions controllers')
 @Controller('question')
 export class QuestionController {
